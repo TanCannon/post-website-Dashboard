@@ -2,6 +2,22 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useMeta from "../hooks/useMeta";
 
+import api from "../api/axios";
+
+import { useAuth } from "../context/AuthContext";
+
+type Post = {
+  sno: number;
+  title: string;
+  slug: string;
+  content: string;
+  tag_line: string;
+  description: string;
+  date: string;
+  last_modified: string | null;
+  img_file: string | null;
+};
+
 export default function Dashboard() {
 
   useMeta({
@@ -9,20 +25,34 @@ export default function Dashboard() {
     description: "Welcome to Tan's Stash blog"
   });
 
-  const [posts, setPosts] = useState([]);
+  const { logout } = useAuth();
+
+  const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/api/admin-get-posts?page=${page}`);
-        const data = await response.json();
+      setLoading(true);
+      setError(null);
 
-        setPosts(data.posts);
-        setTotalPages(data.total_pages);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
+      try {
+        const response = await api.get(`/admin-get-posts?page=${page}`);
+
+        const data = response.data;
+
+        // Defensive fallback
+        setPosts(Array.isArray(data.posts) ? data.posts : []);
+        setTotalPages(data.total_pages ?? 1);
+
+      } catch (err) {
+        console.error("Error fetching posts:", err);
+        setError("Failed to load posts.");
+        setPosts([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -76,6 +106,7 @@ export default function Dashboard() {
           <button
             id="dashboardLogoutBtn"
             className="btn btn-primary flex-fill text-center"
+            onClick={logout}
           >
             LOGOUT
           </button>
@@ -126,55 +157,74 @@ export default function Dashboard() {
             </thead>
 
             <tbody>
-              {posts.map((post) => (
-                <tr key={post.sno}>
-                  <td>{post.sno}</td>
-                  <td>{post.title}</td>
-                  <td>{post.date}</td>
-
-                  <td>
-                    <Link to={`/dashboard/edit/${post.sno}`}>
-                      <button className="btn btn-primary">
-                        Edit
-                      </button>
-                    </Link>
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="text-center">
+                    Loading posts...
                   </td>
-
-                  <td>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(post.sno)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-
                 </tr>
-              ))}
+              ) : error ? (
+                <tr>
+                  <td colSpan={5} className="text-center text-danger">
+                    {error}
+                  </td>
+                </tr>
+              ) : posts.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center">
+                    No posts found.
+                  </td>
+                </tr>
+              ) : (
+                posts.map((post) => (
+                  <tr key={post.sno}>
+                    <td>{post.sno}</td>
+                    <td>{post.title}</td>
+                    <td>{post.date || "—"}</td>
+
+                    <td>
+                      <Link to={`/dashboard/edit/${post.sno}`}>
+                        <button className="btn btn-primary">
+                          Edit
+                        </button>
+                      </Link>
+                    </td>
+
+                    <td>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(post.sno)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
-      <div className="d-flex justify-content-between mb-4">
+        <div className="d-flex justify-content-between mb-4">
 
-        {/* Previous Button */}
-        <div
-          className={`btn btn-primary text-uppercase nav-button ${page === 1 ? "disabled" : ""}`}
-          onClick={() => page > 1 && setPage(page - 1)}
-          style={{ cursor: page === 1 ? "not-allowed" : "pointer" }}
-        >
-          ← Previous
+          {/* Previous Button */}
+          <div
+            className={`btn btn-primary text-uppercase nav-button ${page === 1 ? "disabled" : ""}`}
+            onClick={() => page > 1 && setPage(page - 1)}
+            style={{ cursor: page === 1 ? "not-allowed" : "pointer" }}
+          >
+            ← Previous
+          </div>
+
+          {/* Next Button */}
+          <div
+            className={`btn btn-primary text-uppercase nav-button ${page === totalPages ? "disabled" : ""}`}
+            onClick={() => page < totalPages && setPage(page + 1)}
+            style={{ cursor: page === totalPages ? "not-allowed" : "pointer" }}
+          >
+            Older Posts →
+          </div>
+
         </div>
-
-        {/* Next Button */}
-        <div
-          className={`btn btn-primary text-uppercase nav-button ${page === totalPages ? "disabled" : ""}`}
-          onClick={() => page < totalPages && setPage(page + 1)}
-          style={{ cursor: page === totalPages ? "not-allowed" : "pointer" }}
-        >
-          Older Posts →
-        </div>
-
-      </div>
       </div>
     </>
   );
@@ -186,7 +236,7 @@ export default function Dashboard() {
       method: "DELETE"
     })
       .then(() => {
-        setPosts(posts.filter(p => p.sno !== postId));
+        setPosts(prev => prev.filter(p => p.sno !== postId));
       })
       .catch(err => console.error(err));
   }
