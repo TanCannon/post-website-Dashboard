@@ -4,9 +4,14 @@ import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import EditPostPage from "./pages/EditPostPage";
 import Login from "./pages/Login";
+import AddPostPage from "./pages/AddPostPage";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
+    <>
       <Routes>
         <Route element={<Layout />}>
           {/* Redirect root to login */}
@@ -14,9 +19,22 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/add-blog" element={<AddPostPage />} />
           <Route path="/dashboard/edit/:id" element={<EditPostPage />} />
         </Route>
       </Routes>
+
+      {/* Toast notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
+    </>
   );
 }
 
