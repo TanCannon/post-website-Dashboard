@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./layout/Layout";
 
 import Dashboard from "./pages/Dashboard";
-import EditPostPage from "./pages/EditPostPage";
+import UpdatePostPage from "./pages/UpdatePostPage";
 import Login from "./pages/Login";
 import AddPostPage from "./pages/AddPostPage";
 
@@ -20,7 +20,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/add-blog" element={<AddPostPage />} />
-          <Route path="/dashboard/edit/:id" element={<EditPostPage />} />
+          <Route path="/dashboard/edit/:id" element={<UpdatePostPage />} />
         </Route>
       </Routes>
 
