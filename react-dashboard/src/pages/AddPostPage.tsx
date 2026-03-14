@@ -7,7 +7,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { toast } from "react-toastify";
 
-import {createPost} from "../services/postService";
+import { createPost } from "../services/postService";
 
 import type { Post } from "../schemas/postSchema";
 
@@ -19,16 +19,13 @@ export default function AddPostPage() {
 
     const [loading, setLoading] = useState(false);
 
-    const [post, setPost] = useState<Post>({
-        sno: 0,
+    const [post, setPost] = useState({
         title: "",
         slug: "",
         content: "",
         tag_line: "",
         description: "",
-        date: "",
-        last_modified: null,
-        img_file: null,
+        img_file: "",
     });
 
     const handleChange = (
@@ -53,15 +50,12 @@ export default function AddPostPage() {
 
             // Reset form
             setPost({
-                sno: 0,
                 title: "",
                 slug: "",
                 content: "",
                 tag_line: "",
                 description: "",
-                date: "",
-                last_modified: null,
-                img_file: null,
+                img_file: "",
             });
 
         } catch (error: any) {
