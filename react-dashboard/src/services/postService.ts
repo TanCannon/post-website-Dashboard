@@ -75,3 +75,19 @@ export const updatePost = async (
     throw new Error(message);
   }
 };
+
+export const deletePost = async (postId: Number) =>{
+
+  try{
+    await api.delete(`/delete-blog/${postId}`);
+    return { success: true, message: "Blog deleted successfully!" };
+  }catch (error: any) {
+    const message =
+      error.response?.data?.detail ||
+      error.response?.data?.message ||
+      "Failed to delete blog.";
+
+    throw new Error(message);
+  }
+
+};

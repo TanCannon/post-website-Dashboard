@@ -6,6 +6,10 @@ import api from "../api/axios";
 
 import { useAuth } from "../context/AuthContext";
 
+import { deletePost } from "../services/postService";
+
+import { toast } from "react-toastify";
+
 type Post = {
   sno: number;
   title: string;
@@ -58,6 +62,27 @@ export default function Dashboard() {
 
     fetchPosts();
   }, [page]);
+
+  // Delete handler
+  function handleDelete(postId: Number) {
+    if (!confirm("Do you want to delete this blog?")){
+      return;
+    }
+
+    deletePost(
+      postId
+    )
+    .then((response) => {
+      setPosts(prev => prev.filter(p => p.sno !== postId));
+      toast.success(response.message);
+    })
+    .catch(err => {
+      console.error(err);
+      toast.error("Failed to delete post");
+    });
+    
+    
+  }
 
   return (
     <>
@@ -229,15 +254,4 @@ export default function Dashboard() {
     </>
   );
 
-
-  // Delete handler
-  function handleDelete(postId) {
-    fetch(`/api/posts/${postId}`, {
-      method: "DELETE"
-    })
-      .then(() => {
-        setPosts(prev => prev.filter(p => p.sno !== postId));
-      })
-      .catch(err => console.error(err));
-  }
 }
