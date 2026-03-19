@@ -3,4 +3,6 @@ export type Contact = {
     name: string;
     msg: string;
     date: string;
+    email: string;
+    phone_no: string;
 }
