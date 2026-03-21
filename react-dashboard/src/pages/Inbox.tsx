@@ -5,6 +5,8 @@ import useMeta from "../hooks/useMeta";
 
 import type { Contact } from "../schemas/contactSchema"
 
+import { useNavigate, Link } from "react-router-dom";
+
 export default function Inbox() {
 
     useMeta({
@@ -17,6 +19,8 @@ export default function Inbox() {
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchContacts = async () => {
@@ -43,6 +47,16 @@ export default function Inbox() {
 
         fetchContacts();
     }, [page]);
+
+    // Delete handler
+    function handleDelete(contactId: Number) {
+        if (!confirm("Do you want to delete this blog?")) {
+            return;
+        }
+        alert(`Contact id ${contactId} is deleted.`)
+
+        navigate(-1); // goes to previous page
+    }
 
     return (
         <>
@@ -80,23 +94,33 @@ export default function Inbox() {
                                 Loading contacts...
                             </div>
                         ) : error ? (
-                                <div className="post-preview">
-                                    {error}
-                                </div>
+                            <div className="post-preview">
+                                {error}
+                            </div>
                         ) : contacts.length === 0 ? (
-                                <div className="post-preview">
-                                    No contacts found.
-                                </div>
+                            <div className="post-preview">
+                                No contacts found.
+                            </div>
                         ) : (contacts.map((contact: Contact) => (
-                            <div className="post-preview" key={contact.sno}>
-                                <a href={`/dashboard/inbox/${contact.sno}`}>
-                                    <h2 className="post-title">{contact.name}</h2>
-                                    <h3 className="post-subtitle">{contact.msg}</h3>
-                                </a>
+                            <div className="d-flex justify-content-between" key={contact.sno}>
+                                <div className="post-preview">
+                                    <Link to={`/dashboard/inbox/${contact.sno}`}>
+                                        <h2 className="post-title">{contact.name}</h2>
+                                        <h3 className="post-subtitle">{contact.msg}</h3>
+                                    </Link>
 
-                                <p className="post-meta">
-                                    Posted on {contact.date}
-                                </p>
+                                    <p className="post-meta">
+                                        Posted on {contact.date}
+                                    </p>
+                                </div>
+                                <div className="d-flex justify-content-center align-items-center">
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleDelete(contact.sno)}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))
                         )}

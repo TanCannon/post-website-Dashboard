@@ -8,6 +8,9 @@ import type { Contact } from "../schemas/contactSchema";
 //--- services ---//
 import { fetchAContact } from "../services/inboxService";
 
+//--navigation--//
+import { useNavigate } from "react-router-dom";
+
 type Params = {
   id: string;
 };
@@ -25,6 +28,8 @@ export default function InboxMsgPage() {
     phone_no: "",
   });
 
+  const navigate = useNavigate();
+
   // fetch contact details
   useEffect(() => {
     if (!numericId) return;
@@ -41,6 +46,16 @@ export default function InboxMsgPage() {
 
     fetchData();
   }, [numericId]);
+
+  // Delete handler
+  function handleDelete(contactId: Number) {
+    if (!confirm("Do you want to delete this blog?")) {
+      return;
+    }
+    alert(`Contact id ${contactId} is deleted.`)
+
+    navigate(-1); // goes to previous page
+  }
 
   return (
     <>
@@ -69,6 +84,14 @@ export default function InboxMsgPage() {
               <strong>Message: </strong>
               <br />
               {contact.msg}
+              <div className="d-flex justify-content-end">
+                <button
+                  className="btn btn-danger mt-2"
+                  onClick={() => handleDelete(contact.sno)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
