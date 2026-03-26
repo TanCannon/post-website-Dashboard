@@ -1,17 +1,17 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Layout from "./layout/Layout";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Layout from "../layout/Layout";
 
-import Dashboard from "./pages/Dashboard";
-import UpdatePostPage from "./pages/UpdatePostPage";
-import Login from "./pages/Login";
-import AddPostPage from "./pages/AddPostPage";
-import Inbox from "./pages/Inbox";
-import InboxMsgPage from "./pages/InboxMsgPage";
+import Dashboard from "../pages/Dashboard";
+import UpdatePostPage from "../pages/UpdatePostPage";
+import Login from "../pages/Login";
+import AddPostPage from "../pages/AddPostPage";
+import Inbox from "../pages/Inbox";
+import InboxMsgPage from "../pages/InboxMsgPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function App() {
+function AppRoutes() {
   return (
     <>
       <Routes>
@@ -42,4 +42,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppRoutes;
