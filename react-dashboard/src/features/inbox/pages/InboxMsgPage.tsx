@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 // --- schemas --- //
-import type { Contact } from "../schemas/contactSchema";
+import type { Contact } from "../contactSchema";
 
 //--- services ---//
-import { fetchAContact } from "../services/inboxService";
+import { fetchAContact } from "../inboxService";
 
 //--navigation--//
 import { useNavigate } from "react-router-dom";

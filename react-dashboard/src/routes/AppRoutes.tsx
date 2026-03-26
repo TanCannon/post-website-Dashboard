@@ -6,8 +6,8 @@ import ManagePostsPage from "@/features/posts/pages/ManagePostsPage"
 import UpdatePostPage from "../features/posts/pages/UpdatePostPage";
 import Login from "../pages/Login";
 import AddPostPage from "../features/posts/pages/AddPostPage";
-import Inbox from "../pages/Inbox";
-import InboxMsgPage from "../pages/InboxMsgPage";
+import Inbox from "../features/inbox/pages/Inbox";
+import InboxMsgPage from "../features/inbox/pages/InboxMsgPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

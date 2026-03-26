@@ -1,6 +1,6 @@
 // import type { contactSchema } from "../schemas/contactSchema";
 
-import api from "../api/axios";
+import api from "@/api/axios";
 
 export const fetchAContact = async (id: number) => {
     try {

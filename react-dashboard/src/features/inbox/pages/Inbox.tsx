@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
-import api from "../api/axios";
-import useMeta from "../hooks/useMeta";
+import api from "@/api/axios";
+import useMeta from "@/hooks/useMeta";
 
-import type { Contact } from "../schemas/contactSchema"
+import type { Contact } from "../contactSchema"
 
 import { useNavigate, Link } from "react-router-dom";
 
