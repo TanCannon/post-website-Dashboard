@@ -1,15 +1,13 @@
 import { useState } from "react";
 
-import useMeta from "../hooks/useMeta";
+import useMeta from "@/hooks/useMeta";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { toast } from "react-toastify";
 
-import { createPost } from "../services/postService";
-
-import type { Post } from "../schemas/postSchema";
+import { createPost } from "../postService";
 
 export default function AddPostPage() {
     useMeta({

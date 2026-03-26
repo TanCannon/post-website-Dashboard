@@ -2,9 +2,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "../layout/Layout";
 
 import Dashboard from "../pages/Dashboard";
-import UpdatePostPage from "../pages/UpdatePostPage";
+import ManagePostsPage from "@/features/posts/pages/ManagePostsPage" 
+import UpdatePostPage from "../features/posts/pages/UpdatePostPage";
 import Login from "../pages/Login";
-import AddPostPage from "../pages/AddPostPage";
+import AddPostPage from "../features/posts/pages/AddPostPage";
 import Inbox from "../pages/Inbox";
 import InboxMsgPage from "../pages/InboxMsgPage";
 
@@ -21,8 +22,9 @@ function AppRoutes() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/add-blog" element={<AddPostPage />} />
-          <Route path="/dashboard/edit/:id" element={<UpdatePostPage />} />
+          <Route path="/dashboard/manage-blogs" element={<ManagePostsPage />} />
+          <Route path="/dashboard/manage-blogs/add-blog" element={<AddPostPage />} />
+          <Route path="/dashboard/manage-blogs/edit/:id" element={<UpdatePostPage />} />
           <Route path="/dashboard/inbox" element={<Inbox />} />
           <Route path="/dashboard/inbox/:id" element={<InboxMsgPage />} />
         </Route>

@@ -1,16 +1,16 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import useMeta from "../hooks/useMeta";
+import useMeta from "@/hooks/useMeta";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { toast } from "react-toastify";
 
-import { getPostById, updatePost } from "../services/postService";
+import { getPostById, updatePost } from "../postService";
 
-import type { Post } from "../schemas/postSchema";
+import type { Post } from "../postSchema";
 
 type Params = {
   id: string;

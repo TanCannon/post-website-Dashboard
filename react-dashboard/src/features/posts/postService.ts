@@ -1,6 +1,6 @@
-import type { Post } from "../schemas/postSchema";
+import type { Post } from "./postSchema";
 
-import api from "../api/axios";
+import api from "@/api/axios";
 
 const validatePost = (post: Post) => {
   if (!post.title || post.title.trim().length < 3) {
