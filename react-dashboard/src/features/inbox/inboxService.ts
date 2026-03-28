@@ -17,3 +17,18 @@ export const fetchAContact = async (id: number) => {
     }
 
 }
+
+export const deleteAContact = async (id: number) => {
+    try {
+        const response = await api.delete(`/delete-contact/${id}`);
+        return response.data;
+    }
+    catch (error: any) {
+        const message =
+            error.response?.data?.detail ||
+            error.response?.data?.message ||
+            "Failed to delete message.";
+
+        throw new Error(message);
+    }
+}

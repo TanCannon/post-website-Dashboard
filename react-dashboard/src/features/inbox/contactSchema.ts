@@ -1,5 +1,5 @@
-export type Contact = {
-    sno: number;
+export type ContactCreate = {
+    sno: number,
     name: string;
     msg: string;
     date: string;
