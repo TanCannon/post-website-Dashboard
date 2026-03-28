@@ -35,7 +35,7 @@ export default function ManagePostsPage() {
 
   const [page, setPage] = useState(1)
 
-  const { data, isLoading, isError } = usePosts(page)
+  const { data, isLoading, isError, error } = usePosts(page)
 
   const posts = data?.posts || []
   const totalPages = data?.total_pages || 1
@@ -162,7 +162,8 @@ export default function ManagePostsPage() {
         <PostsTable
           posts={posts}
           loading={isLoading}
-          error={isError}
+          isError={isError}
+          error={error}
           page={page}
           totalPages={totalPages}
           setPage={setPage}

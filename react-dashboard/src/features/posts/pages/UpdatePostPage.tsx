@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 import { getPostById, updatePost } from "../postService";
 
-import type { Post } from "../postSchema";
+import type { PostUpdate } from "../postSchema";
 
 type Params = {
   id: string;
@@ -27,15 +27,13 @@ export default function UpdatePostPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const [post, setPost] = useState<Post>({
+  const [post, setPost] = useState<PostUpdate>({
     sno: 0,
     title: "",
     slug: "",
     content: "",
     tag_line: "",
     description: "",
-    date: "",
-    last_modified: null,
     img_file: null,
   });
 

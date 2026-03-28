@@ -1,13 +1,24 @@
 import { useEffect } from "react";
 
-export default function useMeta(meta = {}) {
+type MetaOptions = {
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  type?: string;
+  twitterCard?: string;
+};
 
+export default function useMeta(meta: MetaOptions = {}): void {
   useEffect(() => {
-
-    const setMeta = (attr, key, value) => {
+    const setMeta = (
+      attr: "name" | "property",
+      key: string,
+      value?: string
+    ): void => {
       if (!value) return;
 
-      let element = document.querySelector(
+      let element = document.querySelector<HTMLMetaElement>(
         `meta[${attr}="${key}"]`
       );
 
@@ -20,10 +31,10 @@ export default function useMeta(meta = {}) {
       element.setAttribute("content", value);
     };
 
-    const setCanonical = (url) => {
+    const setCanonical = (url?: string): void => {
       if (!url) return;
 
-      let link = document.querySelector(
+      let link = document.querySelector<HTMLLinkElement>(
         "link[rel='canonical']"
       );
 
@@ -37,8 +48,9 @@ export default function useMeta(meta = {}) {
     };
 
     /* ---------- TITLE ---------- */
-    if (meta.title)
+    if (meta.title) {
       document.title = meta.title;
+    }
 
     /* ---------- BASIC SEO ---------- */
     setMeta("name", "description", meta.description);
@@ -51,9 +63,7 @@ export default function useMeta(meta = {}) {
     setMeta("property", "og:type", meta.type || "website");
 
     /* ---------- TWITTER ---------- */
-    setMeta("name", "twitter:card",
-      meta.twitterCard || "summary_large_image"
-    );
+    setMeta("name", "twitter:card", meta.twitterCard || "summary_large_image");
     setMeta("name", "twitter:title", meta.title);
     setMeta("name", "twitter:description", meta.description);
     setMeta("name", "twitter:image", meta.image);
@@ -61,13 +71,12 @@ export default function useMeta(meta = {}) {
 
     /* ---------- CANONICAL ---------- */
     setCanonical(meta.url);
-
   }, [
     meta.title,
     meta.description,
     meta.image,
     meta.url,
     meta.type,
-    meta.twitterCard
+    meta.twitterCard,
   ]);
 }

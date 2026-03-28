@@ -9,7 +9,8 @@ type Post = {
 type PostsTableProps = {
     posts: Post[];
     loading: boolean;
-    error: string | null;
+    isError: boolean | null;
+    error: Error | null;
     page: number;
     totalPages: number;
     setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -19,6 +20,7 @@ type PostsTableProps = {
 export function PostsTable({
     posts,
     loading,
+    isError,
     error,
     page,
     totalPages,
@@ -49,10 +51,10 @@ export function PostsTable({
                                     Loading posts...
                                 </td>
                             </tr>
-                        ) : error ? (
+                        ) : isError ? (
                             <tr>
                                 <td colSpan={5} className="text-center text-danger">
-                                    {error}
+                                    {error?.message}
                                 </td>
                             </tr>
                         ) : posts.length === 0 ? (

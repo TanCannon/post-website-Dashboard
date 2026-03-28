@@ -1,8 +1,11 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getPaginatedPosts } from "../postService";
 
+//-- types -- //
+import {PostsResponse} from "../postSchema"
+
 export const usePosts = (page: number) => {
-    return useQuery({
+    return useQuery<PostsResponse>({
         queryKey: ["posts", page],
         queryFn: () => getPaginatedPosts(page),
         placeholderData: keepPreviousData,

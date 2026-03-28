@@ -1,8 +1,8 @@
-import type { Post } from "./postSchema";
+import type { PostCreate, PostUpdate } from "./postSchema";
 
 import api from "@/api/axios";
 
-const validatePost = (post: Post) => {
+const validatePost = (post: PostCreate) => {
   if (!post.title || post.title.trim().length < 3) {
     throw new Error("Title must be at least 3 characters.");
   }
@@ -19,7 +19,7 @@ const validatePost = (post: Post) => {
 
 
 export const createPost = async (
-  post: Post
+  post: PostCreate
 ) => {
   // 1. Validate before API call
   validatePost(post);
@@ -69,7 +69,7 @@ export const getPostById = async (id: number) => {
 };
 
 export const updatePost = async (
-  post: Post
+  post: PostUpdate
 ) => {
   // 1. Validate before API call
   validatePost(post);
