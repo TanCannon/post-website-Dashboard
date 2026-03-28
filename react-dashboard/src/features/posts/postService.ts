@@ -40,6 +40,20 @@ export const createPost = async (
   }
 };
 
+export const getPaginatedPosts = async (page: number) => {
+  try {
+    const response = await api.get(`/admin-get-posts?page=${page}`);
+    return response.data;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.detail ||
+      error.response?.data?.message ||
+      "Failed to fetch blog.";
+
+    throw new Error(message);
+  }
+}
+
 export const getPostById = async (id: number) => {
   try {
     const response = await api.get(`/blog/${id}`);

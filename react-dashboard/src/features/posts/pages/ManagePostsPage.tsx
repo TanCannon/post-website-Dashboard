@@ -12,87 +12,99 @@ import { toast } from "react-toastify";
 
 import { PostsTable } from "../components/PostsTable";
 
-type Post = {
-  sno: number;
-  title: string;
-  slug: string;
-  content: string;
-  tag_line: string;
-  description: string;
-  date: string;
-  last_modified: string | null;
-  img_file: string | null;
-};
+import { usePosts } from "../hooks/usePosts";
+
+// type Post = {
+// sno: number;
+// title: string;
+// slug: string;
+// content: string;
+// tag_line: string;
+// description: string;
+// date: string;
+// last_modified: string | null;
+// img_file: string | null;
+// };
 
 export default function ManagePostsPage() {
-
   useMeta({
     title: "Dashboard | Tan's Stash",
-    description: "Welcome to Tan's Stash blog"
+    description: "Welcome to Tan's Stash blog",
   });
 
   const { logout } = useAuth();
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [posts, setPosts] = useState<Post[]>([]);
+  // const [page, setPage] = useState(1);
+  // const [totalPages, setTotalPages] = useState(1);
+  // // const [loading, setLoading] = useState(false);
+  // // const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      setError(null);
+  // const { posts, loading, error } = usePosts(page)
 
-      try {
-        const response = await api.get(`/admin-get-posts?page=${page}`);
+  const [page, setPage] = useState(1)
 
-        const data = response.data;
+  const { data, isLoading, isError } = usePosts(page)
 
-        // Defensive fallback
-        setPosts(Array.isArray(data.posts) ? data.posts : []);
-        setTotalPages(data.total_pages ?? 1);
+  const posts = data?.posts || []
+  const totalPages = data?.total_pages || 1
+  console.log(`totalpages: ${totalPages}`)
 
-      } catch (err) {
-        console.error("Error fetching posts:", err);
-        setError("Failed to load posts.");
-        setPosts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  // const fetchPosts = async () => {
+  // setLoading(true);
+  // setError(null);
 
-    fetchPosts();
-  }, [page]);
+  // try {
+  // const response = await api.get(`/admin-get-posts?page=${page}`);
+
+  // const data = response.data;
+
+  // // Defensive fallback
+  // setPosts(Array.isArray(data.posts) ? data.posts : []);
+  // setTotalPages(data.total_pages ?? 1);
+
+  // } catch (err) {
+  // console.error("Error fetching posts:", err);
+  // setError("Failed to load posts.");
+  // setPosts([]);
+  // } finally {
+  // setLoading(false);
+  // }
+  // };
+
+  // fetchPosts();
+  // }, [page]);
 
   // Delete handler
-  function handleDelete(postId: Number) {
-    if (!confirm("Do you want to delete this blog?")) {
-      return;
-    }
 
-    deletePost(
-      postId
-    )
-      .then((response) => {
-        setPosts(prev => prev.filter(p => p.sno !== postId));
-        toast.success(response.message);
-      })
-      .catch(err => {
-        console.error(err);
-        toast.error("Failed to delete post");
-      });
-
-
+  /* holding this feature for now (27-03-2026)
+  function handleDelete(postId: number) {
+  if (!confirm("Do you want to delete this blog?")) {
+  return;
   }
-
+ 
+  deletePost(postId)
+  .then((response) => {
+  setPosts((prev) => prev.filter((p) => p.sno !== postId));
+  toast.success(response.message);
+  })
+  .catch((err) => {
+  console.error(err);
+  toast.error("Failed to delete post");
+  });
+  }
+  */
+  function handleDelete(postId: number) {
+    console.log(postId);
+  }
   return (
     <>
       {/* Header */}
       <header
         className="masthead"
         style={{
-          backgroundImage: "url('/assets/img/home-bg.jpg')"
+          backgroundImage: "url('/assets/img/home-bg.jpg')",
         }}
       >
         <div className="container position-relative px-4 px-lg-5">
@@ -101,7 +113,7 @@ export default function ManagePostsPage() {
               <div className="site-heading">
                 <h1>Blog Studio</h1>
                 <h2 className="subheading">
-                   Write, edit, and manage your blogs
+                  Write, edit, and manage your blogs
                 </h2>
               </div>
             </div>
@@ -111,12 +123,13 @@ export default function ManagePostsPage() {
 
       {/* Main Content */}
       <div className="container px-4 px-lg-5 fs-6 fs-md-4 fs-lg-2">
-
         <h2>Basic actions</h2>
 
         <div className="d-grid gap-2 d-md-flex">
-          <Link to="/dashboard/manage-blogs/add-blog"
-            className="btn btn-primary flex-fill text-center">
+          <Link
+            to="/dashboard/manage-blogs/add-blog"
+            className="btn btn-primary flex-fill text-center"
+          >
             ADD A NEW BLOG
           </Link>
 
@@ -136,7 +149,6 @@ export default function ManagePostsPage() {
 
         <form id="postBannerUploadForm">
           <div className="row align-items-end">
-
             <div className="col-12 col-lg-8 mb-3">
               <input
                 className="form-control"
@@ -147,12 +159,10 @@ export default function ManagePostsPage() {
             </div>
 
             <div className="col-12 col-lg-4 d-grid">
-              <button type="submit"
-                className="btn btn-primary">
+              <button type="submit" className="btn btn-primary">
                 Submit
               </button>
             </div>
-
           </div>
         </form>
 
@@ -160,8 +170,8 @@ export default function ManagePostsPage() {
 
         <PostsTable
           posts={posts}
-          loading={loading}
-          error={error}
+          loading={isLoading}
+          error={isError}
           page={page}
           totalPages={totalPages}
           setPage={setPage}
@@ -170,5 +180,4 @@ export default function ManagePostsPage() {
       </div>
     </>
   );
-
 }
