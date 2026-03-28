@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import siteConfig from "../../config/siteConfig";
 
 export default function Navbar() {

@@ -1,17 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import useMeta from "@/hooks/useMeta";
-
-import api from "@/api/axios";
-
 import { useAuth } from "@/context/AuthContext";
-
-import { deletePost } from "../postService";
-
-import { toast } from "react-toastify";
-
 import { PostsTable } from "../components/PostsTable";
-
 import { usePosts } from "../hooks/usePosts";
 
 // type Post = {
