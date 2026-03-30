@@ -86,9 +86,6 @@ export default function ManagePostsPage() {
   });
   }
   */
-  function handleDelete(postId: number) {
-    console.log(postId);
-  }
   return (
     <>
       {/* Header */}
@@ -167,7 +164,6 @@ export default function ManagePostsPage() {
           page={page}
           totalPages={totalPages}
           setPage={setPage}
-          handleDelete={handleDelete}
         />
       </div>
     </>

@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDeletePostMutation } from "../hooks/useDeletePostMutation";
 
 type Post = {
     sno: number;
@@ -14,7 +16,6 @@ type PostsTableProps = {
     page: number;
     totalPages: number;
     setPage: React.Dispatch<React.SetStateAction<number>>;
-    handleDelete: (sno: number) => void;
 };
 
 export function PostsTable({
@@ -25,8 +26,26 @@ export function PostsTable({
     page,
     totalPages,
     setPage,
-    handleDelete,
 }: PostsTableProps) {
+    const deletePostMutation = useDeletePostMutation();
+    const [deletingId, setDeletingId] = useState<number | null>(null);
+
+    function handleDelete(postId: number) {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this post?"
+        );
+
+        if (!confirmed) return;
+
+        setDeletingId(postId);
+
+        deletePostMutation.mutate(postId, {
+            onSettled: () => {
+                setDeletingId(null);
+            },
+        });
+    }
+
     return (
         <>
             {/* Posts Table */}
@@ -72,7 +91,12 @@ export function PostsTable({
 
                                     <td>
                                         <Link to={`/dashboard/manage-blogs/edit/${post.sno}`}>
-                                            <button className="btn btn-primary">Edit</button>
+                                            <button
+                                                className="btn btn-primary"
+                                                disabled={deletingId === post.sno}
+                                            >
+                                                Edit
+                                            </button>
                                         </Link>
                                     </td>
 
@@ -80,8 +104,9 @@ export function PostsTable({
                                         <button
                                             className="btn btn-danger"
                                             onClick={() => handleDelete(post.sno)}
+                                            disabled={deletingId === post.sno}
                                         >
-                                            Delete
+                                            {deletingId === post.sno ? "Deleting..." : "Delete"}
                                         </button>
                                     </td>
                                 </tr>
