@@ -5,18 +5,6 @@ import { useAuth } from "@/context/AuthContext";
 import { PostsTable } from "../components/PostsTable";
 import { usePosts } from "../hooks/usePosts";
 
-// type Post = {
-// sno: number;
-// title: string;
-// slug: string;
-// content: string;
-// tag_line: string;
-// description: string;
-// date: string;
-// last_modified: string | null;
-// img_file: string | null;
-// };
-
 export default function ManagePostsPage() {
   useMeta({
     title: "Dashboard | Tan's Stash",
@@ -24,14 +12,6 @@ export default function ManagePostsPage() {
   });
 
   const { logout } = useAuth();
-
-  // const [posts, setPosts] = useState<Post[]>([]);
-  // const [page, setPage] = useState(1);
-  // const [totalPages, setTotalPages] = useState(1);
-  // // const [loading, setLoading] = useState(false);
-  // // const [error, setError] = useState<string | null>(null);
-
-  // const { posts, loading, error } = usePosts(page)
 
   const [page, setPage] = useState(1)
 
@@ -41,51 +21,6 @@ export default function ManagePostsPage() {
   const totalPages = data?.total_pages || 1
   console.log(`totalpages: ${totalPages}`)
 
-  // useEffect(() => {
-  // const fetchPosts = async () => {
-  // setLoading(true);
-  // setError(null);
-
-  // try {
-  // const response = await api.get(`/admin-get-posts?page=${page}`);
-
-  // const data = response.data;
-
-  // // Defensive fallback
-  // setPosts(Array.isArray(data.posts) ? data.posts : []);
-  // setTotalPages(data.total_pages ?? 1);
-
-  // } catch (err) {
-  // console.error("Error fetching posts:", err);
-  // setError("Failed to load posts.");
-  // setPosts([]);
-  // } finally {
-  // setLoading(false);
-  // }
-  // };
-
-  // fetchPosts();
-  // }, [page]);
-
-  // Delete handler
-
-  /* holding this feature for now (27-03-2026)
-  function handleDelete(postId: number) {
-  if (!confirm("Do you want to delete this blog?")) {
-  return;
-  }
- 
-  deletePost(postId)
-  .then((response) => {
-  setPosts((prev) => prev.filter((p) => p.sno !== postId));
-  toast.success(response.message);
-  })
-  .catch((err) => {
-  console.error(err);
-  toast.error("Failed to delete post");
-  });
-  }
-  */
   return (
     <>
       {/* Header */}

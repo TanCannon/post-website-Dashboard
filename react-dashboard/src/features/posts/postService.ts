@@ -16,8 +16,6 @@ const validatePost = (post: PostCreate) => {
   }
 };
 
-
-
 export const createPost = async (
   post: PostCreate
 ) => {
