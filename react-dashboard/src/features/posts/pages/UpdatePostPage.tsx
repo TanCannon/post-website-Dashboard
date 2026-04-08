@@ -8,9 +8,10 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { toast } from "react-toastify";
 
-import { getPostById, updatePost } from "../postService";
-
 import type { PostUpdate } from "../postSchema";
+
+import { usePostById } from "../hooks/usePostById";
+import { useUpdatePost } from "../hooks/useUpdatePost";
 
 type Params = {
   id: string;
@@ -19,13 +20,11 @@ type Params = {
 export default function UpdatePostPage() {
   useMeta({
     title: "Update Blog | Tan's Stash",
-    description: "Welcome to Tan's Stash blog"
+    description: "Welcome to Tan's Stash blog",
   });
 
   const { id } = useParams<Params>();
   const numericId = Number(id);
-
-  const [loading, setLoading] = useState(false);
 
   const [post, setPost] = useState<PostUpdate>({
     sno: 0,
@@ -37,25 +36,28 @@ export default function UpdatePostPage() {
     img_file: null,
   });
 
+  // Fetch single post
+  const { data, isLoading, isError, error } = usePostById(numericId);
+
+  // Update mutation
+  const { mutate: updatePostMutation, isPending } = useUpdatePost();
+
+  // Sync fetched post into local form state
   useEffect(() => {
-    if (!numericId) return;
+    if (data) {
+      setPost({
+        sno: data.sno ?? 0,
+        title: data.title ?? "",
+        slug: data.slug ?? "",
+        content: data.content ?? "",
+        tag_line: data.tag_line ?? "",
+        description: data.description ?? "",
+        img_file: data.img_file ?? null,
+      });
+    }
+  }, [data]);
 
-    const fetchPost = async () => {
-      try {
-        const response = await getPostById(numericId);
-        setPost(response);
-      } catch (error: any) {
-        console.error("Error fetching post:", error);
-        toast.error(error.message);
-      }
-    };
-
-    fetchPost();
-  }, [numericId]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setPost((prev) => ({
@@ -64,22 +66,35 @@ export default function UpdatePostPage() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
-    try {
-      const response = await updatePost(post);
-
-      toast.success(response.message);
-
-    } catch (error: any) {
-      console.error("Error creating post:", error);
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
+    updatePostMutation(post, {
+      onSuccess: (response) => {
+        toast.success(response.message || "Post updated successfully");
+      },
+      onError: (error: any) => {
+        console.error("Error updating post:", error);
+        toast.error(error.message || "Failed to update post");
+      },
+    });
   };
+
+  if (!numericId) {
+    return <p className="text-center mt-5">Invalid post ID</p>;
+  }
+
+  if (isLoading) {
+    return <p className="text-center mt-5">Loading post...</p>;
+  }
+
+  if (isError) {
+    return (
+      <p className="text-center mt-5 text-danger">
+        {error instanceof Error ? error.message : "Failed to fetch post"}
+      </p>
+    );
+  }
 
   return (
     <>
@@ -110,7 +125,7 @@ export default function UpdatePostPage() {
 
             <form className="mb-4" onSubmit={handleSubmit}>
               {/* Title */}
-              <div className="form-floating">
+              <div className="form-floating mb-3">
                 <input
                   className="form-control"
                   name="title"
@@ -123,7 +138,7 @@ export default function UpdatePostPage() {
               </div>
 
               {/* Tag Line */}
-              <div className="form-floating">
+              <div className="form-floating mb-3">
                 <input
                   className="form-control"
                   name="tag_line"
@@ -136,7 +151,7 @@ export default function UpdatePostPage() {
               </div>
 
               {/* Description */}
-              <div className="form-floating">
+              <div className="form-floating mb-3">
                 <input
                   className="form-control"
                   name="description"
@@ -149,7 +164,7 @@ export default function UpdatePostPage() {
               </div>
 
               {/* Slug */}
-              <div className="form-floating">
+              <div className="form-floating mb-3">
                 <input
                   className="form-control"
                   name="slug"
@@ -178,25 +193,27 @@ export default function UpdatePostPage() {
               </div>
 
               {/* Image File */}
-              <div className="form-floating">
+              <div className="form-floating mb-3">
                 <input
                   className="form-control"
                   name="img_file"
                   type="text"
                   placeholder="Image file"
-                  value={post.img_file ?? ""}
+                  value={typeof post.img_file === "string" ? post.img_file : ""}
                   onChange={handleChange}
                 />
                 <label>Image file</label>
               </div>
 
-              <br />
-
-              <button type="submit" disabled={loading} className="btn btn-primary">
-                {loading && (
+              <button
+                type="submit"
+                disabled={isPending}
+                className="btn btn-primary"
+              >
+                {isPending && (
                   <span className="spinner-border spinner-border-sm me-2"></span>
                 )}
-                {loading ? "Updating..." : "Update Blog"}
+                {isPending ? "Updating..." : "Update Blog"}
               </button>
             </form>
           </div>
