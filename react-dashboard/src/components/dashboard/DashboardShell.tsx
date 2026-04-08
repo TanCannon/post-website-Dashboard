@@ -1,30 +1,36 @@
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardTopbar from "./DashboardTopbar";
 import "./dashboard.css";
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import {
+  closeMobileSidebar,
+  openMobileSidebar,
+  toggleDesktopSidebar,
+} from "@/features/layout/layoutSlice";
+
 export default function DashboardShell() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const mobileOpen = useAppSelector((state) => state.layout.mobileOpen);
+  const desktopCollapsed = useAppSelector(
+    (state) => state.layout.desktopCollapsed
+  );
 
   return (
     <div className="dashboard-wrapper bg-light min-vh-100">
       <DashboardSidebar
         mobileOpen={mobileOpen}
         desktopCollapsed={desktopCollapsed}
-        onCloseMobile={() => setMobileOpen(false)}
-        onToggleDesktop={() => setDesktopCollapsed((prev) => !prev)}
+        onCloseMobile={() => dispatch(closeMobileSidebar())}
+        onToggleDesktop={() => dispatch(toggleDesktopSidebar())}
       />
 
-      <div
-        className={`dashboard-main ${
-          desktopCollapsed ? "expanded" : ""
-        }`}
-      >
+      <div className={`dashboard-main ${desktopCollapsed ? "expanded" : ""}`}>
         <DashboardTopbar
-          onOpenMobile={() => setMobileOpen(true)}
-          onToggleDesktop={() => setDesktopCollapsed((prev) => !prev)}
+          onOpenMobile={() => dispatch(openMobileSidebar())}
+          onToggleDesktop={() => dispatch(toggleDesktopSidebar())}
           desktopCollapsed={desktopCollapsed}
         />
 
