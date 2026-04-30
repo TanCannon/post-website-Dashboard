@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import api from "@/api/axios";
 import useMeta from "@/hooks/useMeta";
 
-import type { Contact } from "../contactSchema"
+import type { ContactCreate } from "../contactSchema"
 
 import { useNavigate, Link } from "react-router-dom";
 
@@ -14,7 +14,7 @@ export default function Inbox() {
         description: "Welcome to Tan's Stash dashboard"
     });
 
-    const [contacts, setContacts] = useState<Contact[]>([]);
+    const [contacts, setContacts] = useState<ContactCreate[]>([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -101,7 +101,7 @@ export default function Inbox() {
                             <div className="post-preview">
                                 No contacts found.
                             </div>
-                        ) : (contacts.map((contact: Contact) => (
+                        ) : (contacts.map((contact: ContactCreate) => (
                             <div className="d-flex justify-content-between" key={contact.sno}>
                                 <div className="post-preview">
                                     <Link to={`/dashboard/inbox/${contact.sno}`}>

@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 // --- schemas --- //
-import type { Contact } from "../contactSchema";
+import type { ContactCreate } from "../contactSchema";
 
 //--- services ---//
-import { fetchAContact } from "../inboxService";
+import { deleteAContact, fetchAContact } from "../inboxService";
 
 //--navigation--//
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ export default function InboxMsgPage() {
   const { id } = useParams<Params>();
   const numericId = Number(id);
 
-  const [contact, setContact] = useState<Contact>({
+  const [contact, setContact] = useState<ContactCreate>({
     sno: 0,
     name: "",
     msg: "",
@@ -48,12 +48,21 @@ export default function InboxMsgPage() {
   }, [numericId]);
 
   // Delete handler
-  function handleDelete(contactId: Number) {
-    if (!confirm("Do you want to delete this blog?")) {
+  const handleDelete = async (contactId: number) => {
+    if (!confirm("Do you want to delete this msg?")) {
       return;
     }
-    alert(`Contact id ${contactId} is deleted.`)
+    // alert(`Contact id ${contactId} is deleted.`)
 
+    try {
+      const response = await deleteAContact(contactId);
+
+      toast.success(response.message);
+
+    } catch (error: any) {
+      console.error("Error deleting msg:", error);
+      toast.error(error.message);
+    }
     navigate(-1); // goes to previous page
   }
 
